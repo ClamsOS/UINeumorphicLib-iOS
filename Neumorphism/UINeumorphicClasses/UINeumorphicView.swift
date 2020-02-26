@@ -21,49 +21,37 @@ class UINeumorphicView: UIView {
       super.init(coder: aDecoder)
       setupView()
     }
+    
     enum ShadowMode {
         case light, dark
     }
     var shadowSubIndex: UInt32 = 0
-    
-    func createSublayerViewOf(view: UIView) -> UIView {
-        let shadowView = UIView()
-        shadowView.clipsToBounds = true
-        shadowView.layer.name = "shadowView"
-        shadowView.frame = view.frame
-        shadowView.layer.cornerRadius = view.layer.cornerRadius
-        view.insertSubview(shadowView, belowSubview: view)
-        
-        return shadowView
-    }
-    
-    func addShadowCALayer(to view: UIView, style: ShadowMode) {
-        let newShadow = CALayer()
-
-        newShadow.name = "shadow\(shadowSubIndex)"
-
-        newShadow.frame = view.bounds
-        newShadow.shadowColor = style == .light ? UIColor(hexString: "#FFF").cgColor : UIColor(hexString: "#000").cgColor
-        newShadow.shadowRadius = 1
-        newShadow.shadowOpacity = 1
-        newShadow.shadowOffset = .zero
-        newShadow.needsDisplayOnBoundsChange = true
-        newShadow.cornerRadius = view.layer.cornerRadius
-        
-        view.layer.insertSublayer(newShadow, at: shadowSubIndex)
-        shadowSubIndex += 1
-    }
+    /// Select 2 Color Light and dark.
+    /// Create a mid-tone by copying the dark element and change the L(Light) value of about 10% to 25%.
+    /// HSL stands for Hue Saturation light
+    /// Select color shade manually by between light and dark colors shown below.
+    /// Eg: Convert Hex #A1AFC3 to HSL(215, 22%, 70%);
+    let lightColor: UIColor = UIColor(hexString: "#FFF")
+    let darkColor: UIColor = UIColor(hexString: "#A3B1C6")
+    let midToneColor: UIColor = UIColor(hexString: "E0E5EC")
     
     //common func to init our view
     private func setupView() {
-        
-        let backgroundView = createSublayerViewOf(view: self)
-        
-        addShadowCALayer(to: backgroundView, style: .light)
-        addShadowCALayer(to: backgroundView, style: .dark)
-        
-        self.backgroundColor = UIColor(hexString: "#E0E0E0")
+        self.backgroundColor = midToneColor
         self.layer.cornerRadius = 10
-        self.layer.masksToBounds = true
+        self.clipsToBounds = true
+        
+        
+        self.addShadow(offset: CGSize(width: 3, height: 3), color: darkColor, radius: 3.0, opacity: 1.0)
+        //self.addShadow(offset: CGSize(width: -3, height: -3), color: lightColor, radius: 3.0, opacity: 0.3)
+
+//        let lightView = UIView(frame: CGRect(x: 0, y: 0, width: self.frame.width, height: self.frame.height))
+//        let darkView = UIView(frame: CGRect(x: 0, y: 0, width: self.frame.width, height: self.frame.height))
+//        
+//        darkView.addShadow(offset: CGSize(width: 3, height: 3), color: darkColor, radius: 3.0, opacity: 1.0)
+//        lightView.addShadow(offset: CGSize(width: -3, height: -3), color: lightColor, radius: 3.0, opacity: 0.3)
+//        
+//        self.addSubview(lightView)
+//        self.addSubview(darkView)
     }
 }

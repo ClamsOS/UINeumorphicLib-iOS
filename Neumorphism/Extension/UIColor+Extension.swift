@@ -27,3 +27,17 @@ extension UIColor {
         self.init(red: CGFloat(r) / 255, green: CGFloat(g) / 255, blue: CGFloat(b) / 255, alpha: CGFloat(a) / 255)
     }
 }
+
+extension UIView {
+    func addShadow(offset: CGSize, color: UIColor, radius: CGFloat, opacity: Float) {
+        self.layer.masksToBounds = false
+        self.layer.shadowOffset = offset
+        self.layer.shadowColor = color.cgColor
+        self.layer.shadowRadius = radius
+        self.layer.shadowOpacity = opacity
+
+        let backgroundCGColor = self.backgroundColor?.cgColor
+        self.backgroundColor = .clear
+        self.layer.backgroundColor = backgroundCGColor
+    }
+}
